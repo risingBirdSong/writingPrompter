@@ -1,0 +1,20 @@
+{
+  "name": "mvp_hack_reactor_proj",
+  "version": "1.0.0",
+  "description": "writing prompter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-server": "ts-node-dev --transpileOnly --ignore-watch node_modules server/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.6",
+    "@types/node": "^14.0.11",
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.44"
+  }
+}
