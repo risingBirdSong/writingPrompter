@@ -45,11 +45,10 @@ client.connect().then(() => {
       }
       const grabFirst = (await client.query(`select likedword from likedwords where id = ${first};`)).rows[0].likedword as string;
       const grabSecond = (await client.query(`select likedword from likedwords where id = ${second};`)).rows[0].likedword as string;
-
-      console.log('here');
       res.send([grabFirst, grabSecond])
     }).catch((err) => {
-      res.send('error fromget two words!');
+      let errMsg = `error from gettwowords! ${err}`; 
+      res.send(errMsg);
     })
   })
 
