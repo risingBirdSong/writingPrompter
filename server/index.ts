@@ -90,7 +90,7 @@ client.connect().then(() => {
   })
 
   app.get('/allsentences', (req, res) => {
-    let sql = `select sentence, id from sentences`;
+    let sql = `select sentence, id from sentences order by id desc`;
     client.query(sql).then((data) => {
       let cleaned = data.rows.map(d => [d.sentence, d.id])
       res.send(cleaned);
