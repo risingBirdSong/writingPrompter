@@ -45,18 +45,17 @@ client.connect().then(() => {
       }
       const grabFirst = (await client.query(`select likedword from likedwords where id = ${first};`)).rows[0].likedword as string;
       const grabSecond = (await client.query(`select likedword from likedwords where id = ${second};`)).rows[0].likedword as string;
-
-      console.log('here');
-      res.send([grabFirst, grabSecond])
+      console.log('grabfirst', grabFirst);
+      res.send([[grabFirst, first], [grabSecond, second]]);
     }).catch((err) => {
-      res.send('error fromget two words!');
+      let errMsg = `error from gettwowords! ${err}`;
+      res.send(errMsg);
     })
   })
 
 
   app.post('/likedword', (req, res) => {
     //todo make sure if the word has already been added they cant add it again
-
     console.log('req body', req.body);
     let { word } = req.body;
     console.log('word', word);
@@ -71,6 +70,47 @@ client.connect().then(() => {
     })
     // res.send('word has been added!');
   })
+
+  app.post('/sentence', (req, res) => {
+    let sql = `INSERT INTO sentences (sentence, firstword, secondword) VALUES ($1 , $2 , $3)`
+    let values = [req.body[0], req.body[1][0], req.body[1][1]];
+    client.query(sql, values).then(() => {
+      res.send('your sentence has been submitted');
+    }).catch((err) => {
+      res.send(`error! ${err}`);
+    })
+  })
+
+  app.post('/addexpandedsentence', (req, res) => {
+    let sql = `insert into expandedsentences (sentence) values ($1)`;
+    let values = [req.body.data];
+    client.query(sql, values).then((data) => {
+      res.send('done inserting');
+    })
+  })
+
+  app.get('/allsentences', (req, res) => {
+    let sql = `select sentence, id from sentences order by id desc`;
+    client.query(sql).then((data) => {
+      let cleaned = data.rows.map(d => [d.sentence, d.id])
+      res.send(cleaned);
+    })
+  })
+
+  app.get('/singlesentence', (req, res) => {
+    let sql = `select sentence from sentences order by random() limit 1`
+    client.query(sql).then((data) => {
+      res.send(data.rows[0].sentence);
+    })
+  })
+
+  app.get('/allextended', (req, res) => {
+    client.query('select sentence from expandedsentences').then((data) => {
+      let cleaned = data.rows.map((info) => info.sentence)
+      res.send(cleaned);
+    })
+  })
+
 
 
   app.listen(PORT, () => {
